@@ -1,16 +1,14 @@
-package com.arafat1419.suitmedia1.ui.event
+package com.arafat1419.suitmedia1.ui.event.map
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.arafat1419.suitmedia1.data.DataEvent
-import com.arafat1419.suitmedia1.databinding.ListEventBinding
-import com.arafat1419.suitmedia1.ui.home.HomeFragment
-import com.arafat1419.suitmedia1.utils.Helper
+import com.arafat1419.suitmedia1.databinding.ListEventMapsBinding
+import com.arafat1419.suitmedia1.ui.event.list.HashtagAdapter
 import com.bumptech.glide.Glide
 
-class EventAdapter : RecyclerView.Adapter<EventAdapter.ViewHolder>() {
+class MapAdapter : RecyclerView.Adapter<MapAdapter.ViewHolder>() {
     private val listData = ArrayList<DataEvent>()
 
     fun setData(data: List<DataEvent>?) {
@@ -19,22 +17,16 @@ class EventAdapter : RecyclerView.Adapter<EventAdapter.ViewHolder>() {
         this.listData.addAll(data)
     }
 
-    inner class ViewHolder(private val binding: ListEventBinding) :
+    inner class ViewHolder(private val binding: ListEventMapsBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(data: DataEvent) {
             with(binding) {
-                txtEventName.text = data.name
-                txtEventDate.text = Helper.stringToDate(data.date)
+                txtNameMaps.text = data.name
                 Glide.with(itemView.context)
                     .load(data.image)
-                    .into(imgEvent)
-                itemView.setOnClickListener {
-                    it.findNavController().previousBackStackEntry?.savedStateHandle?.set(
-                        HomeFragment.EVENT_NAME_BUNDLE,
-                        data.name
-                    )
-                    it.findNavController().popBackStack()
-                }
+                    .into(imgEventMaps)
+                val hashtagAdapter = HashtagAdapter()
+                hashtagAdapter.setData(data.hashtag)
             }
         }
 
@@ -42,7 +34,7 @@ class EventAdapter : RecyclerView.Adapter<EventAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemsDataBinding =
-            ListEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ListEventMapsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(itemsDataBinding)
     }
 

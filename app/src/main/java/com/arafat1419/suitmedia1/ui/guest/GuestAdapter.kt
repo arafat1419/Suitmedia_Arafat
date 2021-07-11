@@ -31,9 +31,8 @@ class GuestAdapter : RecyclerView.Adapter<GuestAdapter.ViewHolder>() {
                 itemView.setOnClickListener {
                     val map = mapOf(
                         HomeFragment.GUEST_NAME_BUNDLE to data.name,
-                        HomeFragment.GUEST_DATE_BUNDLE to data.birthdate.takeLast(2)
+                        HomeFragment.GUEST_DATE_BUNDLE to data.birthdate
                     )
-                    it.findNavController()
                     it.findNavController().previousBackStackEntry?.savedStateHandle?.set(
                         HomeFragment.GUEST_BUNDLE,
                         map

@@ -31,17 +31,7 @@ class HomeFragment : Fragment() {
 
         username = arguments?.getString(USERNAME_BUNDLE)
 
-        val controller = findNavController().currentBackStackEntry?.savedStateHandle
-        controller?.getLiveData<String>(EVENT_NAME_BUNDLE)?.observe(viewLifecycleOwner) {
-            binding?.txtEvent?.text = it
-        }
-        controller?.getLiveData<Map<String, String>>(GUEST_BUNDLE)?.observe(viewLifecycleOwner) {
-            binding?.txtGuest?.text = it[GUEST_NAME_BUNDLE]
-            Toast.makeText(
-                context,
-                it[GUEST_DATE_BUNDLE]?.let { it1 -> dateCheck(it1.toInt()) }, Toast.LENGTH_SHORT
-            ).show()
-        }
+        getDataByController()
 
         binding?.apply {
             btnEvent.setOnClickListener {
@@ -52,6 +42,32 @@ class HomeFragment : Fragment() {
             }
             txtName.text = username
         }
+
+        Toast.makeText(context, isPalindrom(username), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun getDataByController() {
+        val controller = findNavController().currentBackStackEntry?.savedStateHandle
+
+        controller?.getLiveData<String>(EVENT_NAME_BUNDLE)?.observe(viewLifecycleOwner) {
+            binding?.txtEvent?.text = it
+        }
+
+        controller?.getLiveData<Map<String, String>>(GUEST_BUNDLE)?.observe(viewLifecycleOwner) {
+            binding?.txtGuest?.text = it[GUEST_NAME_BUNDLE]
+            val birthdate = it[GUEST_DATE_BUNDLE]?.replace("-", "")
+            val date = birthdate?.takeLast(2)
+            val month = birthdate?.subSequence(4, 6).toString()
+            if (birthdate != null) {
+                Toast.makeText(
+                    context, "Date is ${dateCheck(date!!.toInt())} & Month ${
+                        isPrime(
+                            month.toInt()
+                        )
+                    }", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
 
@@ -60,6 +76,26 @@ class HomeFragment : Fragment() {
         else if (date % 3 == 0) "blackberry"
         else if (date % 2 == 0) "android"
         else "feature phone"
+    }
+
+    private fun isPalindrom(name: String?): String {
+        val nameCheck = name!!.replace(" ", "").lowercase()
+        return if (nameCheck == nameCheck.reversed()) "IsPalindrome"
+        else "Not Palindrome"
+    }
+
+    private fun isPrime(month: Int): String {
+        if (month == 1) return "Not Prime"
+        var isNotPrime = false
+        var i = 2
+        while (i <= month / 2) {
+            if (month % i == 0) {
+                isNotPrime = true
+                break
+            }
+            ++i
+        }
+        return if (isNotPrime) "Not Prime" else "Prime"
     }
 
     override fun onDestroy() {

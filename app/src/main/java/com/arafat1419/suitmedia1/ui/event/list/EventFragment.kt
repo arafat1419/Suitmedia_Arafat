@@ -1,13 +1,14 @@
-package com.arafat1419.suitmedia1.ui.event
+package com.arafat1419.suitmedia1.ui.event.list
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.arafat1419.suitmedia1.R
 import com.arafat1419.suitmedia1.databinding.FragmentEventBinding
+import com.arafat1419.suitmedia1.ui.event.EventViewModel
 
 class EventFragment : Fragment() {
 
@@ -28,6 +29,25 @@ class EventFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding?.apply {
+            btnBack.setNavigationOnClickListener {
+                activity?.onBackPressed()
+            }
+            btnBack.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.btn_add -> findNavController().navigate(R.id.action_eventFragment_to_mapsFragment)
+                }
+                true
+            }
+        }
+        loadData()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.event_menu, menu)
+    }
+
+    private fun loadData() {
         if (activity != null) {
             val viewModel = ViewModelProvider(
                 this,
